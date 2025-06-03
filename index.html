@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TransaDesa - Pantau Informasi Dana Desa Terkini</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* Reset & base */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #f3fc8f 0%, #ff4d00 100%);
+      color: #422800;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transition: background 0.3s ease;
+    }
+    header {
+      background: linear-gradient(90deg, #ff4d00, #f3fc8f);
+      color: #422800;
+      padding: 1.8rem 2rem;
+      text-align: center;
+      box-shadow: 0 6px 15px rgba(255, 77, 0, 0.6);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    header h1 {
+      margin: 0;
+      font-weight: 700;
+      font-size: 1.95rem;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+      user-select: none;
+      filter: drop-shadow(1px 1px 1px #a34e10);
+    }
+    header h1 svg {
+      width: 32px;
+      height: 32px;
+      filter: drop-shadow(0 1px 1px rgba(0,0,0,0.15));
+      transform: rotate(-10deg);
+    }
+
+    main {
+      flex-grow: 1;
+      max-width: 980px;
+      margin: 3rem auto 4rem;
+      padding: 0 1rem;
+      width: 100%;
+      user-select: none;
+      color: #422800;
+    }
+
+    /* Ringkasan Dana Desa */
+    .summary-cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 1.3rem;
+      margin-bottom: 3rem;
+      user-select: text;
+    }
+    .card {
+      background: white;
+      padding: 1.6rem 2rem;
+      border-radius: 18px;
+      box-shadow: 0 10px 20px rgba(255, 77, 0, 0.15);
+      flex: 1 1 30%;
+      min-width: 250px;
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+      color: #6a3e0a;
+    }
+    .card::before {
+      content: "";
+      position: absolute;
+      top: -40%;
+      right: -30%;
+      width: 160%;
+      height: 260%;
+      background: radial-gradient(circle at center, #ff9754, #ff4d00);
+      opacity: 0.1;
+      transform: rotate(35deg);
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      border-radius: 60%;
+      z-index: 0;
+    }
+    .card:hover {
+      transform: scale(1.08);
+      box-shadow: 0 15px 40px rgba(255, 77, 0, 0.35);
+    }
+    .card:hover::before {
+      opacity: 0.2;
+    }
+
+    .card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      color: #af541b;
+      font-weight: 700;
+      letter-spacing: 0.9px;
+      position: relative;
+      z-index: 1;
+      text-transform: uppercase;
+      user-select: text;
+    }
+    .card p {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin: 0;
+      color: #8c3a02;
+      position: relative;
+      z-index: 1;
+      user-select: text;
+    }
+    .card.expense p {
+      color: #b23b00;
+    }
+    .card.remaining p {
+      color: #d3bd03;
+    }
+
+    /* Daftar Proyek */
+    section.project-list {
+      margin-bottom: 3rem;
+      user-select: text;
+    }
+    section.project-list h2 {
+      margin-bottom: 1.3rem;
+      font-weight: 800;
+      font-size: 1.75rem;
+      color: #422800;
+      border-bottom: 3px solid #ff4d00;
+      padding-bottom: 0.4rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      user-select: text;
+    }
+    section.project-list h2 svg {
+      width: 28px;
+      height: 28px;
+      fill: #ff4d00;
+      filter: drop-shadow(0 1px 1px rgba(0,0,0,0.15));
+      user-select: none;
+    }
+
+    .project-card {
+      background: white;
+      border-radius: 20px;
+      padding: 1.3rem 1.7rem;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 8px 25px rgba(255, 77, 0, 0.15);
+      transition: box-shadow 0.4s ease, transform 0.3s ease;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+      color: #6a3e0a;
+    }
+    .project-card:hover {
+      box-shadow: 0 14px 50px rgba(255, 77, 0, 0.35);
+      transform: translateY(-6px);
+    }
+    .project-title {
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin-bottom: 0.75rem;
+      color: #922b00;
+      user-select: text;
+    }
+    .progress-bar-container {
+      background: #fff4d3;
+      height: 18px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.1);
+      user-select: none;
+    }
+    .progress-bar {
+      height: 18px;
+      background: linear-gradient(90deg, #ff4d00, #f3fc8f);
+      width: 0%;
+      border-radius: 12px 0 0 12px;
+      transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 6px rgb(255 77 0 / 0.35);
+      user-select: none;
+    }
+    .project-status {
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      color: #a34800;
+      font-weight: 600;
+      user-select: text;
+    }
+
+    /* Info Terbaru */
+    section.updates {
+      background: white;
+      border-radius: 20px;
+      padding: 1.8rem 2rem;
+      margin-bottom: 3rem;
+      box-shadow: 0 12px 32px rgba(255, 77, 0, 0.14);
+      user-select: text;
+      color: #422800;
+    }
+    section.updates h2 {
+      font-weight: 800;
+      margin-bottom: 1.4rem;
+      font-size: 1.7rem;
+      color: #422800;
+      border-bottom: 3px solid #ff4d00;
+      padding-bottom: 0.3rem;
+      display: inline-block;
+    }
+    .update-item {
+      margin-bottom: 1.1rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid #fbe9db;
+      user-select: text;
+      line-height: 1.4;
+    }
+    .update-item:last-child {
+      border-bottom: none;
+    }
+    .update-date {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #926628;
+      margin-bottom: 0.3rem;
+      font-style: italic;
+      font-family: 'Poppins', sans-serif;
+    }
+    .update-text {
+      font-size: 1.1rem;
+      color: #703b00;
+      font-weight: 600;
+      user-select: text;
+    }
+
+    /* Komentar */
+    section.comments {
+      max-width: 700px;
+      margin: 0 auto 4rem;
+      user-select: text;
+      color: #422800;
+    }
+    section.comments h2 {
+      font-weight: 800;
+      margin-bottom: 1.3rem;
+      font-size: 1.7rem;
+      color: #422800;
+      border-bottom: 3px solid #ff4d00;
+      padding-bottom: 0.3rem;
+      display: inline-block;
+    }
+    form.comment-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 1.8rem;
+    }
+    textarea#comment-input {
+      resize: vertical;
+      min-height: 80px;
+      padding: 1rem 1.3rem;
+      font-size: 1.1rem;
+      border-radius: 20px;
+      border: 2px solid #f9f5bb;
+      font-family: 'Poppins', sans-serif;
+      transition: border-color 0.35s ease, box-shadow 0.35s ease;
+      box-shadow: inset 0 2px 6px rgba(255, 133, 67, 0.25);
+      color: #422800;
+      font-weight: 600;
+      background: #fffde7;
+    }
+    textarea#comment-input::placeholder {
+      font-weight: 400;
+      color: #b89f51;
+    }
+    textarea#comment-input:focus {
+      border-color: #ff4d00;
+      outline: none;
+      box-shadow: 0 0 16px #ff4d0055;
+      background: #ffffcc;
+    }
+    button#submit-comment {
+      align-self: flex-end;
+      background: #ff4d00;
+      border: none;
+      color: white;
+      padding: 0.65rem 1.9rem;
+      font-size: 1.12rem;
+      border-radius: 20px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 6px 12px #e04300;
+      user-select: none;
+    }
+    button#submit-comment:hover {
+      background: #e04300;
+      transform: scale(1.05);
+      box-shadow: 0 9px 20px #b63000;
+    }
+    button#submit-comment:active {
+      transform: scale(0.97);
+    }
+    ul.comment-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      max-height: 260px;
+      overflow-y: auto;
+      border-radius: 20px;
+      border: 2px solid #f3fc8f;
+      background: white;
+      box-shadow: inset 0 0 12px #fffdd0aa;
+    }
+    ul.comment-list li {
+      display: flex;
+      gap: 0.8rem;
+      align-items: flex-start;
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid #ffe8b7;
+      font-size: 1rem;
+      color: #422800;
+      font-weight: 600;
+      position: relative;
+      border-radius: 16px;
+      background: #fff9d3;
+      margin: 0.6rem 1rem;
+      user-select: text;
+      box-shadow: 2px 3px 6px rgba(255, 77, 0, 0.15);
+      transition: box-shadow 0.3s ease;
+    }
+    ul.comment-list li:last-child {
+      border-bottom: none;
+      margin-bottom: 0.7rem;
+    }
+    ul.comment-list li:hover {
+      box-shadow: 6px 8px 15px rgba(255, 77, 0, 0.35);
+      background: #fff4b3;
+    }
+    ul.comment-list li .avatar {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      background: radial-gradient(circle at center, #ff4d00, #f3fc8f);
+      border-radius: 50%;
+      color: #422800;
+      font-weight: 700;
+      font-size: 1.2rem;
+      line-height: 36px;
+      text-align: center;
+      user-select: none;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    }
+    ul.comment-list li .text-content {
+      flex-grow: 1;
+      line-height: 1.4;
+    }
+    ul.comment-list li .comment-time {
+      font-size: 0.75rem;
+      font-style: italic;
+      color: #765c08;
+      margin-top: 5px;
+      user-select: text;
+    }
+
+    /* Scrollbar custom */
+    ul.comment-list::-webkit-scrollbar {
+      width: 8px;
+    }
+    ul.comment-list::-webkit-scrollbar-thumb {
+      background: #ffb347;
+      border-radius: 20px;
+      box-shadow: inset 0 0 6px #ffd27a77;
+    }
+    ul.comment-list::-webkit-scrollbar-track {
+      background: #fffdd0;
+      border-radius: 20px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 780px) {
+      main {
+        margin: 2rem auto 3rem;
+      }
+      .summary-cards {
+        flex-direction: column;
+        gap: 1.7rem;
+      }
+      .card {
+        flex: 1 1 100%;
+        min-width: unset;
+      }
+      section.project-list h2 {
+        font-size: 1.5rem;
+      }
+      section.updates h2,
+      section.comments h2 {
+        font-size: 1.5rem;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1>
+      Pantau Informasi Dana Desa Terkini
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true" role="img" focusable="false">
+        <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.59 5.58L20 12l-8-8-8 8z"></path>
+      </svg>
+    </h1>
+  </header>
+
+  <main>
+    <!-- Ringkasan Anggaran Dana Desa -->
+    <section class="summary-cards" aria-label="Ringkasan Dana Desa">
+      <article class="card budget" tabindex="0" aria-describedby="budget-desc" role="region" aria-label="Anggaran Dana Desa">
+        <h3>Anggaran Desa</h3>
+        <p id="budget-amount">Rp 1.250.000.000,-</p>
+      </article>
+      <article class="card expense" tabindex="0" aria-describedby="expense-desc" role="region" aria-label="Pengeluaran Dana Desa">
+        <h3>Pengeluaran</h3>
+        <p id="expense-amount">Rp 675.000.000,-</p>
+      </article>
+      <article class="card remaining" tabindex="0" aria-describedby="remaining-desc" role="region" aria-label="Sisa Dana Desa">
+        <h3>Sisa Dana</h3>
+        <p id="remaining-amount">Rp 575.000.000,-</p>
+      </article>
+    </section>
+
+    <!-- Daftar Proyek -->
+    <section class="project-list" aria-label="Daftar Proyek Dana Desa">
+      <h2>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" role="img" focusable="false"><path d="M12 3v18m9-9H3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        Progres Proyek
+      </h2>
+
+      <div class="project-card" tabindex="0" role="region" aria-labelledby="proj1-title" aria-describedby="proj1-desc">
+        <div class="project-title" id="proj1-title">Pembangunan Jembatan Desa</div>
+        <div class="progress-bar-container" aria-label="Progress Pembangunan Jembatan Desa">
+          <div class="progress-bar" style="width: 65%;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100" role="progressbar"></div>
+        </div>
+        <div class="project-status" id="proj1-desc">65% selesai</div>
+      </div>
+
+      <div class="project-card" tabindex="0" role="region" aria-labelledby="proj2-title" aria-describedby="proj2-desc">
+        <div class="project-title" id="proj2-title">Renovasi Balai Desa</div>
+        <div class="progress-bar-container" aria-label="Progress Renovasi Balai Desa">
+          <div class="progress-bar" style="width: 40%; background: linear-gradient(90deg, #f3fc8f, #ffb347);" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" role="progressbar"></div>
+        </div>
+        <div class="project-status" id="proj2-desc">40% selesai</div>
+      </div>
+
+      <div class="project-card" tabindex="0" role="region" aria-labelledby="proj3-title" aria-describedby="proj3-desc">
+        <div class="project-title" id="proj3-title">Pembangunan Jalan Lingkungan</div>
+        <div class="progress-bar-container" aria-label="Progress Pembangunan Jalan Lingkungan">
+          <div class="progress-bar" style="width: 80%; background: linear-gradient(90deg, #ff4d00, #f3fc8f);" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" role="progressbar"></div>
+        </div>
+        <div class="project-status" id="proj3-desc">80% selesai</div>
+      </div>
+    </section>
+
+    <!-- Info Terbaru -->
+    <section class="updates" aria-label="Informasi Dana Desa Terbaru">
+      <h2>Update Dana Desa</h2>
+      <article class="update-item" role="article" tabindex="0">
+        <time class="update-date" datetime="2024-06-01">1 Juni 2024</time>
+        <p class="update-text">Dana tahap kedua telah dicairkan ke rekening desa sebesar Rp 500.000.000.</p>
+      </article>
+      <article class="update-item" role="article" tabindex="0">
+        <time class="update-date" datetime="2024-05-20">20 Mei 2024</time>
+        <p class="update-text">Proyek Renovasi Balai Desa dimulai, progres awal diperkirakan 40% selesai dalam 2 bulan ke depan.</p>
+      </article>
+      <article class="update-item" role="article" tabindex="0">
+        <time class="update-date" datetime="2024-05-10">10 Mei 2024</time>
+        <p class="update-text">Pengerjaan pembangunan jalan lingkungan sudah mencapai 80% dan berjalan lancar.</p>
+      </article>
+    </section>
+
+    <!-- Fitur Komentar Warga -->
+    <section class="comments" aria-label="Komentar Warga Tentang Dana Desa">
+      <h2>Berikan Masukan Anda</h2>
+      <form class="comment-form" id="comment-form" aria-label="Form komentar dana desa">
+        <textarea id="comment-input" aria-required="true" placeholder="Tulis komentar Anda di sini..." required></textarea>
+        <button type="submit" id="submit-comment" aria-label="Kirim komentar">Kirim</button>
+      </form>
+      <ul class="comment-list" id="comment-list" aria-live="polite" aria-relevant="additions"></ul>
+    </section>
+  </main>
+
+  <script>
+    // Comment system using localStorage for persistence in this session
+
+    const commentForm = document.getElementById('comment-form');
+    const commentInput = document.getElementById('comment-input');
+    const commentList = document.getElementById('comment-list');
+
+    // Helper to format date and time with Indonesian locale
+    function formatTimestamp(date) {
+      return date.toLocaleString('id-ID', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    // Create avatar initials from comment text first letters or random leaf emoji fallback
+    function getAvatarInitials(text) {
+      // Extract first two letters of first word capitalized
+      const words = text.trim().split(' ');
+      if(words.length === 0) return '🍊';
+      let initials = words[0].slice(0, 2).toUpperCase();
+      if(initials.length < 2 && words.length > 1) initials += words[1][0].toUpperCase();
+      return initials || '🍊';
+    }
+
+    // Load comments from localStorage
+    function loadComments() {
+      const savedComments = JSON.parse(localStorage.getItem('transadesa-comments') || '[]');
+      commentList.innerHTML = '';
+      savedComments.forEach(({ text, time }) => {
+        appendComment(text, new Date(time));
+      });
+    }
+
+    // Append comment to list
+    function appendComment(text, date) {
+      const li = document.createElement('li');
+      li.tabIndex = 0;
+
+      // Avatar circle with initials
+      const avatar = document.createElement('div');
+      avatar.className = 'avatar';
+      avatar.textContent = getAvatarInitials(text);
+
+      const textContent = document.createElement('div');
+      textContent.className = 'text-content';
+
+      const commentText = document.createElement('div');
+      commentText.textContent = text;
+      commentText.setAttribute('aria-label', 'Isi komentar');
+
+      const timeEl = document.createElement('div');
+      timeEl.className = 'comment-time';
+      timeEl.textContent = `Ditulis pada: ${formatTimestamp(date)}`;
+      timeEl.setAttribute('aria-label', 'Waktu komentar dibuat');
+
+      textContent.appendChild(commentText);
+      textContent.appendChild(timeEl);
+
+      li.appendChild(avatar);
+      li.appendChild(textContent);
+
+      commentList.appendChild(li);
+    }
+
+    // Save comment
+    function saveComment(text) {
+      const savedComments = JSON.parse(localStorage.getItem('transadesa-comments') || '[]');
+      savedComments.push({ text, time: new Date().toISOString() });
+      localStorage.setItem('transadesa-comments', JSON.stringify(savedComments));
+    }
+
+    // Handle form submit
+    commentForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const commentText = commentInput.value.trim();
+      if (commentText.length === 0) return;
+
+      saveComment(commentText);
+      appendComment(commentText, new Date());
+      commentInput.value = '';
+      commentInput.focus();
+    });
+
+    // Animate progress bars on page load
+    window.addEventListener('load', () => {
+      document.querySelectorAll('.progress-bar').forEach(bar => {
+        const w = bar.style.width;
+        bar.style.width = '0';
+        setTimeout(() => {
+          bar.style.width = w;
+        }, 200);
+      });
+    });
+
+    // Initialize
+    loadComments();
+  </script>
+</body>
+</html>
