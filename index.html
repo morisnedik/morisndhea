@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TransaDesa - Pantau Informasi Dana Desa Terkini</title>
+  <title>TransaDesa - Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
     /* Reset & base */
@@ -13,25 +13,24 @@
     body {
       font-family: 'Poppins', sans-serif;
       margin: 0;
-      background: linear-gradient(135deg, #f3fc8f 0%, #ff4d00 100%);
-      color: #422800;
-      line-height: 1.6;
+      background: linear-gradient(135deg, #bbc35b 0%, #3b6812 100%);
+      color: #2e3e0e;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      transition: background 0.3s ease;
     }
     header {
-      background: linear-gradient(90deg, #ff4d00, #f3fc8f);
-      color: #422800;
+      background: linear-gradient(90deg, #3b6812, #bbc35b);
+      color: #27320a;
       padding: 1.8rem 2rem;
       text-align: center;
-      box-shadow: 0 6px 15px rgba(255, 77, 0, 0.6);
+      box-shadow: 0 6px 15px rgba(59, 104, 18, 0.6);
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 20;
+      user-select: none;
     }
     header h1 {
       margin: 0;
@@ -42,8 +41,7 @@
       align-items: center;
       justify-content: center;
       gap: 0.7rem;
-      user-select: none;
-      filter: drop-shadow(1px 1px 1px #a34e10);
+      filter: drop-shadow(1px 1px 1px #607a22);
     }
     header h1 svg {
       width: 32px;
@@ -52,16 +50,68 @@
       transform: rotate(-10deg);
     }
 
-    main {
-      flex-grow: 1;
-      max-width: 980px;
-      margin: 3rem auto 4rem;
-      padding: 0 1rem;
-      width: 100%;
+    nav#main-nav {
+      background: #e0e69d;
+      box-shadow: 0 4px 12px rgba(59, 104, 18, 0.3);
+      display: flex;
+      justify-content: center;
+      gap: 1.3rem;
+      padding: 0.9rem 1rem;
       user-select: none;
-      color: #422800;
+      position: sticky;
+      top: 70px;
+      z-index: 18;
+    }
+    nav#main-nav button {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #425117;
+      padding: 0.5rem 1.4rem;
+      border-radius: 25px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      user-select: none;
+      box-shadow: 0 4px 8px #bbc35b99;
+    }
+    nav#main-nav button:hover,
+    nav#main-nav button:focus {
+      background: #bbc35b99;
+      color: #27320a;
+      outline: none;
+      box-shadow: 0 6px 15px #bbc35bdd;
+      transform: scale(1.05);
+      user-select: none;
+    }
+    nav#main-nav button.active {
+      background: #3b6812;
+      color: #e5e8bc;
+      box-shadow: 0 8px 20px #2e501000;
+      transform: scale(1.1);
+      user-select: none;
     }
 
+    main#content-area {
+      flex-grow: 1;
+      max-width: 980px;
+      margin: 2.8rem auto 4rem;
+      padding: 0 1rem;
+      width: 100%;
+      color: #27320a;
+      user-select: text;
+      min-height: 500px;
+    }
+
+    /* Shared hidden */
+    .hidden {
+      display: none !important;
+    }
+
+    /* Pantau Informasi Dana Desa Terkini */
+    section#pantau-info {
+      user-select: text;
+    }
     /* Ringkasan Dana Desa */
     .summary-cards {
       display: flex;
@@ -75,14 +125,14 @@
       background: white;
       padding: 1.6rem 2rem;
       border-radius: 18px;
-      box-shadow: 0 10px 20px rgba(255, 77, 0, 0.15);
+      box-shadow: 0 10px 20px rgba(59, 104, 18, 0.15);
       flex: 1 1 30%;
       min-width: 250px;
       transition: transform 0.35s ease, box-shadow 0.35s ease;
       cursor: default;
       position: relative;
       overflow: hidden;
-      color: #6a3e0a;
+      color: #4a5613;
     }
     .card::before {
       content: "";
@@ -91,7 +141,7 @@
       right: -30%;
       width: 160%;
       height: 260%;
-      background: radial-gradient(circle at center, #ff9754, #ff4d00);
+      background: radial-gradient(circle at center, #bbc35b, #3b6812);
       opacity: 0.1;
       transform: rotate(35deg);
       pointer-events: none;
@@ -101,7 +151,7 @@
     }
     .card:hover {
       transform: scale(1.08);
-      box-shadow: 0 15px 40px rgba(255, 77, 0, 0.35);
+      box-shadow: 0 15px 40px rgba(59, 104, 18, 0.35);
     }
     .card:hover::before {
       opacity: 0.2;
@@ -110,7 +160,7 @@
     .card h3 {
       font-size: 1.2rem;
       margin-bottom: 1rem;
-      color: #af541b;
+      color: #576720;
       font-weight: 700;
       letter-spacing: 0.9px;
       position: relative;
@@ -119,19 +169,20 @@
       user-select: text;
     }
     .card p {
-      font-size: 2.2rem;
-      font-weight: 800;
+      font-size: 1.8rem;
+      font-weight: 600;
       margin: 0;
-      color: #8c3a02;
+      color: #3b5813;
       position: relative;
       z-index: 1;
       user-select: text;
+      line-height: 1.2;
     }
     .card.expense p {
-      color: #b23b00;
+      color: #5d4e00;
     }
     .card.remaining p {
-      color: #d3bd03;
+      color: #8f9910;
     }
 
     /* Daftar Proyek */
@@ -143,8 +194,8 @@
       margin-bottom: 1.3rem;
       font-weight: 800;
       font-size: 1.75rem;
-      color: #422800;
-      border-bottom: 3px solid #ff4d00;
+      color: #274107;
+      border-bottom: 3px solid #bbc35b;
       padding-bottom: 0.4rem;
       display: inline-flex;
       align-items: center;
@@ -154,7 +205,7 @@
     section.project-list h2 svg {
       width: 28px;
       height: 28px;
-      fill: #ff4d00;
+      fill: #bbc35b;
       filter: drop-shadow(0 1px 1px rgba(0,0,0,0.15));
       user-select: none;
     }
@@ -164,26 +215,26 @@
       border-radius: 20px;
       padding: 1.3rem 1.7rem;
       margin-bottom: 1.2rem;
-      box-shadow: 0 8px 25px rgba(255, 77, 0, 0.15);
+      box-shadow: 0 8px 25px rgba(59, 104, 18, 0.15);
       transition: box-shadow 0.4s ease, transform 0.3s ease;
       cursor: default;
       position: relative;
       overflow: hidden;
-      color: #6a3e0a;
+      color: #4a5613;
     }
     .project-card:hover {
-      box-shadow: 0 14px 50px rgba(255, 77, 0, 0.35);
+      box-shadow: 0 14px 50px rgba(59, 104, 18, 0.35);
       transform: translateY(-6px);
     }
     .project-title {
       font-weight: 700;
       font-size: 1.3rem;
       margin-bottom: 0.75rem;
-      color: #922b00;
+      color: #3b6812;
       user-select: text;
     }
     .progress-bar-container {
-      background: #fff4d3;
+      background: #dde1a3;
       height: 18px;
       border-radius: 12px;
       overflow: hidden;
@@ -192,63 +243,50 @@
     }
     .progress-bar {
       height: 18px;
-      background: linear-gradient(90deg, #ff4d00, #f3fc8f);
+      background: linear-gradient(90deg, #bbc35b, #3b6812);
       width: 0%;
       border-radius: 12px 0 0 12px;
       transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 4px 6px rgb(255 77 0 / 0.35);
+      box-shadow: 0 4px 6px rgb(59 104 18 / 0.35);
       user-select: none;
     }
     .project-status {
       margin-top: 0.5rem;
       font-size: 1rem;
-      color: #a34800;
+      color: #546b15;
       font-weight: 600;
       user-select: text;
     }
 
-    /* Info Terbaru */
-    section.updates {
+    /* Ringkasan Hasil Rapat Desa */
+    section.meeting-summary {
       background: white;
-      border-radius: 20px;
+      border-radius: 18px;
+      box-shadow: 0 12px 32px rgba(59, 104, 18, 0.14);
       padding: 1.8rem 2rem;
+      color: #27320a;
       margin-bottom: 3rem;
-      box-shadow: 0 12px 32px rgba(255, 77, 0, 0.14);
       user-select: text;
-      color: #422800;
     }
-    section.updates h2 {
+    section.meeting-summary h2 {
       font-weight: 800;
-      margin-bottom: 1.4rem;
       font-size: 1.7rem;
-      color: #422800;
-      border-bottom: 3px solid #ff4d00;
+      color: #27320a;
+      border-bottom: 3px solid #bbc35b;
       padding-bottom: 0.3rem;
+      margin-bottom: 1rem;
+      user-select: text;
       display: inline-block;
     }
-    .update-item {
-      margin-bottom: 1.1rem;
-      padding-bottom: 0.85rem;
-      border-bottom: 1px solid #fbe9db;
-      user-select: text;
-      line-height: 1.4;
-    }
-    .update-item:last-child {
-      border-bottom: none;
-    }
-    .update-date {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: #926628;
-      margin-bottom: 0.3rem;
-      font-style: italic;
-      font-family: 'Poppins', sans-serif;
-    }
-    .update-text {
+    section.meeting-summary ul {
+      padding-left: 1.3rem;
       font-size: 1.1rem;
-      color: #703b00;
+      line-height: 1.5;
+      color: #3e6408;
       font-weight: 600;
-      user-select: text;
+    }
+    section.meeting-summary ul li {
+      margin-bottom: 0.7rem;
     }
 
     /* Komentar */
@@ -256,14 +294,14 @@
       max-width: 700px;
       margin: 0 auto 4rem;
       user-select: text;
-      color: #422800;
+      color: #27320a;
     }
     section.comments h2 {
       font-weight: 800;
       margin-bottom: 1.3rem;
       font-size: 1.7rem;
-      color: #422800;
-      border-bottom: 3px solid #ff4d00;
+      color: #27320a;
+      border-bottom: 3px solid #bbc35b;
       padding-bottom: 0.3rem;
       display: inline-block;
     }
@@ -279,42 +317,42 @@
       padding: 1rem 1.3rem;
       font-size: 1.1rem;
       border-radius: 20px;
-      border: 2px solid #f9f5bb;
+      border: 2px solid #dee29f;
       font-family: 'Poppins', sans-serif;
       transition: border-color 0.35s ease, box-shadow 0.35s ease;
-      box-shadow: inset 0 2px 6px rgba(255, 133, 67, 0.25);
-      color: #422800;
+      box-shadow: inset 0 2px 6px rgba(109, 141, 44, 0.25);
+      color: #27320a;
       font-weight: 600;
-      background: #fffde7;
+      background: #f2f5b1;
     }
     textarea#comment-input::placeholder {
       font-weight: 400;
-      color: #b89f51;
+      color: #99a154;
     }
     textarea#comment-input:focus {
-      border-color: #ff4d00;
+      border-color: #3b6812;
       outline: none;
-      box-shadow: 0 0 16px #ff4d0055;
-      background: #ffffcc;
+      box-shadow: 0 0 16px #3b681255;
+      background: #ddf00d;
     }
     button#submit-comment {
       align-self: flex-end;
-      background: #ff4d00;
+      background: #3b6812;
       border: none;
-      color: white;
+      color: #e9f0a9;
       padding: 0.65rem 1.9rem;
       font-size: 1.12rem;
       border-radius: 20px;
       font-weight: 700;
       cursor: pointer;
       transition: background-color 0.3s ease, transform 0.2s ease;
-      box-shadow: 0 6px 12px #e04300;
+      box-shadow: 0 6px 12px #2d500e;
       user-select: none;
     }
     button#submit-comment:hover {
-      background: #e04300;
+      background: #2d500e;
       transform: scale(1.05);
-      box-shadow: 0 9px 20px #b63000;
+      box-shadow: 0 9px 20px #24440c;
     }
     button#submit-comment:active {
       transform: scale(0.97);
@@ -326,25 +364,25 @@
       max-height: 260px;
       overflow-y: auto;
       border-radius: 20px;
-      border: 2px solid #f3fc8f;
+      border: 2px solid #bbc35b;
       background: white;
-      box-shadow: inset 0 0 12px #fffdd0aa;
+      box-shadow: inset 0 0 12px #d6dc8777;
     }
     ul.comment-list li {
       display: flex;
       gap: 0.8rem;
       align-items: flex-start;
       padding: 0.8rem 1rem;
-      border-bottom: 1px solid #ffe8b7;
+      border-bottom: 1px solid #e4eb90;
       font-size: 1rem;
-      color: #422800;
+      color: #27320a;
       font-weight: 600;
       position: relative;
       border-radius: 16px;
-      background: #fff9d3;
+      background: #f9fbb3;
       margin: 0.6rem 1rem;
       user-select: text;
-      box-shadow: 2px 3px 6px rgba(255, 77, 0, 0.15);
+      box-shadow: 2px 3px 6px rgba(59, 104, 18, 0.15);
       transition: box-shadow 0.3s ease;
     }
     ul.comment-list li:last-child {
@@ -352,16 +390,16 @@
       margin-bottom: 0.7rem;
     }
     ul.comment-list li:hover {
-      box-shadow: 6px 8px 15px rgba(255, 77, 0, 0.35);
-      background: #fff4b3;
+      box-shadow: 6px 8px 15px rgba(59, 104, 18, 0.35);
+      background: #f2f885;
     }
     ul.comment-list li .avatar {
       flex-shrink: 0;
       width: 36px;
       height: 36px;
-      background: radial-gradient(circle at center, #ff4d00, #f3fc8f);
+      background: radial-gradient(circle at center, #bbc35b, #3b6812);
       border-radius: 50%;
-      color: #422800;
+      color: #27320a;
       font-weight: 700;
       font-size: 1.2rem;
       line-height: 36px;
@@ -376,7 +414,7 @@
     ul.comment-list li .comment-time {
       font-size: 0.75rem;
       font-style: italic;
-      color: #765c08;
+      color: #59652e;
       margin-top: 5px;
       user-select: text;
     }
@@ -386,18 +424,37 @@
       width: 8px;
     }
     ul.comment-list::-webkit-scrollbar-thumb {
-      background: #ffb347;
+      background: #9ba645;
       border-radius: 20px;
-      box-shadow: inset 0 0 6px #ffd27a77;
+      box-shadow: inset 0 0 6px #bac75f99;
     }
     ul.comment-list::-webkit-scrollbar-track {
-      background: #fffdd0;
+      background: #e6eba6;
       border-radius: 20px;
+    }
+
+    /* Placeholder sections for other features */
+    section.placeholder-section {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem 2.5rem;
+      box-shadow: 0 12px 40px rgba(59, 104, 18, 0.18);
+      color: #5c6627;
+      font-weight: 600;
+      font-size: 1.3rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 320px;
+      border: 3px dashed #bbc35b99;
+      text-align: center;
+      user-select: text;
+      margin-bottom: 3rem;
     }
 
     /* Responsive adjustments */
     @media (max-width: 780px) {
-      main {
+      main#content-area {
         margin: 2rem auto 3rem;
       }
       .summary-cards {
@@ -411,109 +468,144 @@
       section.project-list h2 {
         font-size: 1.5rem;
       }
-      section.updates h2,
+      section.meeting-summary h2,
       section.comments h2 {
         font-size: 1.5rem;
       }
+      nav#main-nav {
+        gap: 0.8rem;
+        flex-wrap: wrap;
+      }
+      nav#main-nav button {
+        font-size: 1rem;
+        padding: 0.45rem 1rem;
+      }
+      section.placeholder-section {
+        font-size: 1.1rem;
+        padding: 1.6rem 2rem;
+        min-height: 260px;
+      }
     }
-
   </style>
 </head>
 <body>
   <header>
     <h1>
-      Pantau Informasi Dana Desa Terkini
+      TransaDesa
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true" role="img" focusable="false">
         <path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.59 5.58L20 12l-8-8-8 8z"></path>
       </svg>
     </h1>
   </header>
 
-  <main>
-    <!-- Ringkasan Anggaran Dana Desa -->
-    <section class="summary-cards" aria-label="Ringkasan Dana Desa">
-      <article class="card budget" tabindex="0" aria-describedby="budget-desc" role="region" aria-label="Anggaran Dana Desa">
-        <h3>Anggaran Desa</h3>
-        <p id="budget-amount">Rp 1.250.000.000,-</p>
-      </article>
-      <article class="card expense" tabindex="0" aria-describedby="expense-desc" role="region" aria-label="Pengeluaran Dana Desa">
-        <h3>Pengeluaran</h3>
-        <p id="expense-amount">Rp 675.000.000,-</p>
-      </article>
-      <article class="card remaining" tabindex="0" aria-describedby="remaining-desc" role="region" aria-label="Sisa Dana Desa">
-        <h3>Sisa Dana</h3>
-        <p id="remaining-amount">Rp 575.000.000,-</p>
-      </article>
+  <nav id="main-nav" role="tablist" aria-label="Navigasi fitur TransaDesa">
+    <button role="tab" aria-selected="true" aria-controls="pantau-info" id="tab-pantau" class="active" tabindex="0">Pantau Informasi</button>
+    <button role="tab" aria-selected="false" aria-controls="saldo-desa" id="tab-saldo" tabindex="-1">Saldo Dana Desa</button>
+    <button role="tab" aria-selected="false" aria-controls="aduan" id="tab-aduan" tabindex="-1">Aduan</button>
+    <button role="tab" aria-selected="false" aria-controls="galeri" id="tab-galeri" tabindex="-1">Galeri</button>
+    <button role="tab" aria-selected="false" aria-controls="program-desa" id="tab-program" tabindex="-1">Program Desa</button>
+  </nav>
+
+  <main id="content-area">
+    <!-- Pantau Informasi Dana Desa Terkini -->
+    <section id="pantau-info" role="tabpanel" tabindex="0" aria-labelledby="tab-pantau">
+      <!-- Rencana Anggaran Tahun Berjalan -->
+      <section class="summary-cards" aria-label="Rencana Anggaran Tahun Berjalan">
+        <article class="card budget" tabindex="0" aria-describedby="budget-desc" role="region" aria-label="Anggaran Total Tahun Berjalan">
+          <h3>Rencana Anggaran Tahun Berjalan</h3>
+          <p id="budget-amount">Rp 1.350.000.000,-</p>
+        </article>
+        <article class="card expense" tabindex="0" aria-describedby="expense-desc" role="region" aria-label="Pengeluaran Saat Ini">
+          <h3>Pengeluaran Saat Ini</h3>
+          <p id="expense-amount">Rp 720.000.000,-</p>
+        </article>
+        <article class="card remaining" tabindex="0" aria-describedby="remaining-desc" role="region" aria-label="Sisa Dana">
+          <h3>Sisa Dana</h3>
+          <p id="remaining-amount">Rp 630.000.000,-</p>
+        </article>
+      </section>
+
+      <!-- Proyek yang sedang berjalan dan statusnya -->
+      <section class="project-list" aria-label="Proyek Berjalan dan Statusnya">
+        <h2>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" role="img" focusable="false"><path d="M12 3v18m9-9H3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          Proyek Berjalan
+        </h2>
+
+        <div class="project-card" tabindex="0" role="region" aria-labelledby="proj1-title" aria-describedby="proj1-desc">
+          <div class="project-title" id="proj1-title">Pembangunan Jembatan Desa</div>
+          <div class="progress-bar-container" aria-label="Progress Pembangunan Jembatan Desa">
+            <div class="progress-bar" style="width: 60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" role="progressbar"></div>
+          </div>
+          <div class="project-status" id="proj1-desc">60% selesai</div>
+        </div>
+
+        <div class="project-card" tabindex="0" role="region" aria-labelledby="proj2-title" aria-describedby="proj2-desc">
+          <div class="project-title" id="proj2-title">Renovasi Balai Desa</div>
+          <div class="progress-bar-container" aria-label="Progress Renovasi Balai Desa">
+            <div class="progress-bar" style="width: 45%; background: linear-gradient(90deg, #bbc35b, #a9ae4f);" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" role="progressbar"></div>
+          </div>
+          <div class="project-status" id="proj2-desc">45% selesai</div>
+        </div>
+
+        <div class="project-card" tabindex="0" role="region" aria-labelledby="proj3-title" aria-describedby="proj3-desc">
+          <div class="project-title" id="proj3-title">Pembangunan Jalan Lingkungan</div>
+          <div class="progress-bar-container" aria-label="Progress Pembangunan Jalan Lingkungan">
+            <div class="progress-bar" style="width: 78%; background: linear-gradient(90deg, #3b6812, #bbc35b);" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100" role="progressbar"></div>
+          </div>
+          <div class="project-status" id="proj3-desc">78% selesai</div>
+        </div>
+      </section>
+
+      <!-- Ringkasan hasil rapat desa -->
+      <section class="meeting-summary" aria-label="Ringkasan Hasil Rapat Desa">
+        <h2>Ringkasan Hasil Rapat Desa</h2>
+        <ul>
+          <li>Persetujuan dana tambahan untuk pembangunan fasilitas olah raga desa sebesar Rp 100.000.000.</li>
+          <li>Pemutakhiran data warga untuk pembagian bantuan sosial yang akan dilakukan bulan depan.</li>
+          <li>Persiapan program pelatihan keterampilan bagi pemuda desa selama 3 bulan ke depan.</li>
+          <li>Pengaturan jadwal kerja proyek agar tidak bentrok dengan kegiatan desa lainnya.</li>
+        </ul>
+      </section>
+
+      <!-- Fitur Komentar Warga -->
+      <section class="comments" aria-label="Komentar Warga Tentang Dana Desa">
+        <h2>Berikan Masukan Anda</h2>
+        <form class="comment-form" id="comment-form" aria-label="Form komentar dana desa">
+          <textarea id="comment-input" aria-required="true" placeholder="Tulis komentar Anda di sini..." required></textarea>
+          <button type="submit" id="submit-comment" aria-label="Kirim komentar">Kirim</button>
+        </form>
+        <ul class="comment-list" id="comment-list" aria-live="polite" aria-relevant="additions"></ul>
+      </section>
     </section>
 
-    <!-- Daftar Proyek -->
-    <section class="project-list" aria-label="Daftar Proyek Dana Desa">
-      <h2>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" role="img" focusable="false"><path d="M12 3v18m9-9H3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-        Progres Proyek
-      </h2>
-
-      <div class="project-card" tabindex="0" role="region" aria-labelledby="proj1-title" aria-describedby="proj1-desc">
-        <div class="project-title" id="proj1-title">Pembangunan Jembatan Desa</div>
-        <div class="progress-bar-container" aria-label="Progress Pembangunan Jembatan Desa">
-          <div class="progress-bar" style="width: 65%;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100" role="progressbar"></div>
-        </div>
-        <div class="project-status" id="proj1-desc">65% selesai</div>
-      </div>
-
-      <div class="project-card" tabindex="0" role="region" aria-labelledby="proj2-title" aria-describedby="proj2-desc">
-        <div class="project-title" id="proj2-title">Renovasi Balai Desa</div>
-        <div class="progress-bar-container" aria-label="Progress Renovasi Balai Desa">
-          <div class="progress-bar" style="width: 40%; background: linear-gradient(90deg, #f3fc8f, #ffb347);" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" role="progressbar"></div>
-        </div>
-        <div class="project-status" id="proj2-desc">40% selesai</div>
-      </div>
-
-      <div class="project-card" tabindex="0" role="region" aria-labelledby="proj3-title" aria-describedby="proj3-desc">
-        <div class="project-title" id="proj3-title">Pembangunan Jalan Lingkungan</div>
-        <div class="progress-bar-container" aria-label="Progress Pembangunan Jalan Lingkungan">
-          <div class="progress-bar" style="width: 80%; background: linear-gradient(90deg, #ff4d00, #f3fc8f);" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" role="progressbar"></div>
-        </div>
-        <div class="project-status" id="proj3-desc">80% selesai</div>
-      </div>
+    <!-- Saldo Dana Desa Placeholder -->
+    <section id="saldo-desa" role="tabpanel" tabindex="0" aria-labelledby="tab-saldo" class="hidden placeholder-section">
+      <p>Fitur <strong>Saldo Dana Desa</strong> sedang dalam pengembangan. Nantikan update selanjutnya!</p>
     </section>
 
-    <!-- Info Terbaru -->
-    <section class="updates" aria-label="Informasi Dana Desa Terbaru">
-      <h2>Update Dana Desa</h2>
-      <article class="update-item" role="article" tabindex="0">
-        <time class="update-date" datetime="2024-06-01">1 Juni 2024</time>
-        <p class="update-text">Dana tahap kedua telah dicairkan ke rekening desa sebesar Rp 500.000.000.</p>
-      </article>
-      <article class="update-item" role="article" tabindex="0">
-        <time class="update-date" datetime="2024-05-20">20 Mei 2024</time>
-        <p class="update-text">Proyek Renovasi Balai Desa dimulai, progres awal diperkirakan 40% selesai dalam 2 bulan ke depan.</p>
-      </article>
-      <article class="update-item" role="article" tabindex="0">
-        <time class="update-date" datetime="2024-05-10">10 Mei 2024</time>
-        <p class="update-text">Pengerjaan pembangunan jalan lingkungan sudah mencapai 80% dan berjalan lancar.</p>
-      </article>
+    <!-- Aduan Placeholder -->
+    <section id="aduan" role="tabpanel" tabindex="0" aria-labelledby="tab-aduan" class="hidden placeholder-section">
+      <p>Fitur <strong>Aduan</strong> sedang dalam pengembangan. Anda akan dapat menyampaikan keluhan dan masukan secara langsung.</p>
     </section>
 
-    <!-- Fitur Komentar Warga -->
-    <section class="comments" aria-label="Komentar Warga Tentang Dana Desa">
-      <h2>Berikan Masukan Anda</h2>
-      <form class="comment-form" id="comment-form" aria-label="Form komentar dana desa">
-        <textarea id="comment-input" aria-required="true" placeholder="Tulis komentar Anda di sini..." required></textarea>
-        <button type="submit" id="submit-comment" aria-label="Kirim komentar">Kirim</button>
-      </form>
-      <ul class="comment-list" id="comment-list" aria-live="polite" aria-relevant="additions"></ul>
+    <!-- Galeri Placeholder -->
+    <section id="galeri" role="tabpanel" tabindex="0" aria-labelledby="tab-galeri" class="hidden placeholder-section">
+      <p>Fitur <strong>Galeri</strong> sedang dalam pengembangan. Akan ada foto dan video dokumentasi kegiatan desa di sini.</p>
+    </section>
+
+    <!-- Program Desa Placeholder -->
+    <section id="program-desa" role="tabpanel" tabindex="0" aria-labelledby="tab-program" class="hidden placeholder-section">
+      <p>Fitur <strong>Program Desa</strong> sedang dalam pengembangan. Informasi berbagai program desa akan ditampilkan di sini.</p>
     </section>
   </main>
 
   <script>
-    // Comment system using localStorage for persistence in this session
-
+    // Comment system (for Pantau Informasi Dana Desa Terkini) with localStorage persistence
     const commentForm = document.getElementById('comment-form');
     const commentInput = document.getElementById('comment-input');
     const commentList = document.getElementById('comment-list');
 
-    // Helper to format date and time with Indonesian locale
     function formatTimestamp(date) {
       return date.toLocaleString('id-ID', {
         year: 'numeric',
@@ -524,17 +616,14 @@
       });
     }
 
-    // Create avatar initials from comment text first letters or random leaf emoji fallback
     function getAvatarInitials(text) {
-      // Extract first two letters of first word capitalized
       const words = text.trim().split(' ');
-      if(words.length === 0) return '🍊';
+      if(words.length === 0) return '🌿';
       let initials = words[0].slice(0, 2).toUpperCase();
       if(initials.length < 2 && words.length > 1) initials += words[1][0].toUpperCase();
-      return initials || '🍊';
+      return initials || '🌿';
     }
 
-    // Load comments from localStorage
     function loadComments() {
       const savedComments = JSON.parse(localStorage.getItem('transadesa-comments') || '[]');
       commentList.innerHTML = '';
@@ -543,12 +632,9 @@
       });
     }
 
-    // Append comment to list
     function appendComment(text, date) {
       const li = document.createElement('li');
       li.tabIndex = 0;
-
-      // Avatar circle with initials
       const avatar = document.createElement('div');
       avatar.className = 'avatar';
       avatar.textContent = getAvatarInitials(text);
@@ -574,26 +660,22 @@
       commentList.appendChild(li);
     }
 
-    // Save comment
     function saveComment(text) {
       const savedComments = JSON.parse(localStorage.getItem('transadesa-comments') || '[]');
       savedComments.push({ text, time: new Date().toISOString() });
       localStorage.setItem('transadesa-comments', JSON.stringify(savedComments));
     }
 
-    // Handle form submit
     commentForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const commentText = commentInput.value.trim();
       if (commentText.length === 0) return;
-
       saveComment(commentText);
       appendComment(commentText, new Date());
       commentInput.value = '';
       commentInput.focus();
     });
 
-    // Animate progress bars on page load
     window.addEventListener('load', () => {
       document.querySelectorAll('.progress-bar').forEach(bar => {
         const w = bar.style.width;
@@ -602,10 +684,60 @@
           bar.style.width = w;
         }, 200);
       });
+      loadComments();
     });
 
-    // Initialize
-    loadComments();
+    // Tab navigation logic
+    const tabs = document.querySelectorAll('nav#main-nav button');
+    const panels = document.querySelectorAll('main#content-area > section');
+
+    function activateTab(selectedTab) {
+      tabs.forEach(tab => {
+        const isSelected = tab === selectedTab;
+        tab.classList.toggle('active', isSelected);
+        tab.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+        tab.tabIndex = isSelected ? 0 : -1;
+      });
+      panels.forEach(panel => {
+        const isVisible = panel.id === selectedTab.getAttribute('aria-controls');
+        panel.classList.toggle('hidden', !isVisible);
+        if (isVisible) {
+          panel.focus();
+        }
+      });
+    }
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        activateTab(tab);
+      });
+      tab.addEventListener('keydown', (e) => {
+        const currentIndex = Array.from(tabs).indexOf(e.currentTarget);
+        let newIndex = null;
+        switch (e.key) {
+          case 'ArrowRight':
+            newIndex = (currentIndex + 1) % tabs.length;
+            tabs[newIndex].focus();
+            break;
+          case 'ArrowLeft':
+            newIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+            tabs[newIndex].focus();
+            break;
+          case 'Home':
+            tabs[0].focus();
+            break;
+          case 'End':
+            tabs[tabs.length - 1].focus();
+            break;
+          case 'Enter':
+          case 'Space':
+            activateTab(e.currentTarget);
+            break;
+        }
+      });
+    });
+
   </script>
 </body>
 </html>
+
